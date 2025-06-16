@@ -7,6 +7,9 @@ import {
     getRecommendedUsers,
     sendFriendRequest,
   } from "../controllers/user.controller.js";
+import { protectRoute } from "../middleware/auth.middleware.js";
+
+const router = express.Router()
 
 router.use(protectRoute);
 
@@ -18,3 +21,6 @@ router.put("/friend-request/:id/accept", acceptFriendRequest);
 
 router.get("/friend-requests", getFriendRequests);
 router.get("/outgoing-friend-requests", getOutgoingFriendReqs);
+
+
+export default router;
