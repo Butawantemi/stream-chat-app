@@ -1,7 +1,25 @@
+
 import { ShipWheelIcon } from "lucide-react";
 import { Link } from "react-router";
+import useSignUp from "../hooks/useSignUp";
+import { useState } from "react";
 
 const SignUpPage = () => {
+  const [signupData, setSignupData] = useState({
+    fullName: "",
+    email: "",
+    password: "",
+  });
+
+ 
+ const {isPending, error, signupMutation} = useSignUp();
+
+
+  const handleSignup = (e) => {
+    e.preventDefault();
+    signupMutation(signupData);
+  };
+
   return (
     <div
       className="h-screen flex items-center justify-center p-4 sm:p-6 md:p-8"
@@ -16,8 +34,14 @@ const SignUpPage = () => {
             </span>
           </div>
 
+          {error && (
+            <div className="alert alert-error mb-4">
+              <span>{error.response.data.message}</span>
+            </div>
+          )}
+
           <div className="w-full">
-            <form>
+            <form onSubmit={handleSignup}>
               <div className="space-y-4">
                 <div>
                   <h2 className="text-xl font-semibold">Create an Account</h2>
@@ -33,8 +57,10 @@ const SignUpPage = () => {
                     </label>
                     <input
                       type="text"
-                      placeholder="John Doe"
+                      placeholder="Prisca Mlali"
                       className="input input-bordered w-full"
+                      value={signupData.fullName}
+                      onChange={(e) => setSignupData({ ...signupData, fullName: e.target.value })}
                       required
                     />
                   </div>
@@ -45,9 +71,11 @@ const SignUpPage = () => {
                     </label>
                     <input
                       type="email"
-                      placeholder="john@gmail.com"
+                      placeholder="mlali@gmail.com"
                       className="input input-bordered w-full"
-                      required
+                      value={signupData.email}
+                      onChange={(e) => setSignupData({...signupData, email: e.target.value})}
+                      required 
                     />
                   </div>
 
@@ -59,6 +87,9 @@ const SignUpPage = () => {
                       type="password"
                       placeholder="********"
                       className="input input-bordered w-full"
+                    value={signupData.password}
+                      onChange={(e) => setSignupData({...signupData, password: e.target.value})} 
+                      required
                     />
                     <p className="text-xs opacity-70 mt-1">
                       Password must be at least 6 characters long
@@ -85,9 +116,16 @@ const SignUpPage = () => {
                     </label>
                   </div>
 
-                  <button className="btn btn-primary w-full">
-                    Create Account
-                  </button>
+                  <button className="btn btn-primary w-full" type="submit">
+                  {isPending ? (
+                    <>
+                      <span className="loading loading-spinner loading-xs"></span>
+                      Loading...
+                    </>
+                  ) : (
+                    "Create Account"
+                  )}
+                </button>
 
                   <div className="text-center mt-4">
                     <p className="text-sm">
